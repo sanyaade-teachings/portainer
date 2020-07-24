@@ -7,8 +7,8 @@ import {
   KubernetesApplicationDataAccessPolicies,
   KubernetesApplicationDeploymentTypes,
   KubernetesApplicationPublishingTypes,
-  KubernetesApplicationTypes,
   KubernetesApplicationQuotaDefaults,
+  KubernetesApplicationTypes,
 } from 'Kubernetes/models/application/models';
 import {
   KubernetesApplicationConfigurationFormValue,
@@ -215,9 +215,18 @@ class KubernetesCreateApplicationController {
   }
 
   onChangeExistingVolume(index) {
-    if (!this.state.useExistingVolume[index]) {
+    if (this.formValues.PersistedFolders[index].UseNewVolume) {
       this.formValues.PersistedFolders[index].ExistingVolume = null;
     }
+  }
+
+  useNewVolume(index) {
+    this.formValues.PersistedFolders[index].UseNewVolume = true;
+    this.formValues.PersistedFolders[index].ExistingVolume = null;
+  }
+
+  useExistingVolume(index) {
+    this.formValues.PersistedFolders[index].UseNewVolume = false;
   }
 
   onChangeExistingVolumeSelection() {
@@ -498,9 +507,9 @@ class KubernetesCreateApplicationController {
     this.refreshStacksConfigsApps(namespace);
     this.formValues.Configurations = [];
     this.availableVolumes = _.filter(this.volumes, (volume) => volume.ResourcePool.Namespace.Name === namespace);
-    this.formValues.PersistedFolders = _.forEach(this.formValues.PersistedFolders, (persistedFolder, index) => {
-      persistedFolder.ExistingVolume = {};
-      this.state.useExistingVolume[index] = false;
+    this.formValues.PersistedFolders = _.forEach(this.formValues.PersistedFolders, (persistedFolder) => {
+      persistedFolder.ExistingVolume = null;
+      persistedFolder.UseNewVolume = true;
     });
   }
   /**
@@ -611,7 +620,6 @@ class KubernetesCreateApplicationController {
           namespace: this.$transition$.params().namespace,
           name: this.$transition$.params().name,
         },
-        useExistingVolume: [],
       };
 
       this.editChanges = [];
@@ -648,10 +656,10 @@ class KubernetesCreateApplicationController {
         delete this.formValues.ApplicationType;
 
         if (this.application.ApplicationType !== KubernetesApplicationTypes.STATEFULSET) {
-          _.forEach(this.formValues.PersistedFolders, (persistedFolder, index) => {
+          _.forEach(this.formValues.PersistedFolders, (persistedFolder) => {
             const volume = _.find(this.availableVolumes, (vol) => vol.PersistentVolumeClaim.Name === persistedFolder.PersistentVolumeClaimName);
             if (volume) {
-              this.state.useExistingVolume[index] = true;
+              persistedFolder.UseNewVolume = false;
               persistedFolder.ExistingVolume = volume;
             }
           });

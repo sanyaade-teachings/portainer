@@ -1,4 +1,4 @@
-import { KubernetesApplicationDeploymentTypes, KubernetesApplicationPublishingTypes, KubernetesApplicationDataAccessPolicies } from './models';
+import { KubernetesApplicationDataAccessPolicies, KubernetesApplicationDeploymentTypes, KubernetesApplicationPublishingTypes } from './models';
 
 /**
  * KubernetesApplicationFormValues Model
@@ -92,6 +92,7 @@ const _KubernetesApplicationPersistedFolderFormValue = Object.freeze({
   SizeUnit: 'GB',
   StorageClass: {},
   ExistingVolume: null,
+  UseNewVolume: true,
 });
 
 export class KubernetesApplicationPersistedFolderFormValue {
