@@ -531,6 +531,7 @@ type (
 		EdgeAgentCheckinInterval                  int                  `json:"EdgeAgentCheckinInterval"`
 		EnableEdgeComputeFeatures                 bool                 `json:"EnableEdgeComputeFeatures"`
 		UserSessionTimeout                        string               `json:"UserSessionTimeout"`
+		EnableTelemetry                           bool                 `json:"EnableTelemetry"`
 
 		// Deprecated fields
 		DisplayDonationHeader       bool
