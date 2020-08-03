@@ -52,6 +52,16 @@ class KubernetesConfigureController {
       this.endpoint.Kubernetes.Configuration.StorageClasses = classes;
       this.endpoint.Kubernetes.Configuration.UseLoadBalancer = this.formValues.UseLoadBalancer;
       await this.EndpointService.updateEndpoint(this.endpoint.Id, this.endpoint);
+
+      const storagePromises = _.map(classes, (storageClass) => {
+        const oldStorageClass = _.find(this.oldStorageClasses, { Name: storageClass.Name });
+        if (oldStorageClass) {
+          return this.KubernetesStorageService.patch(oldStorageClass, storageClass);
+        }
+      });
+
+      Promise.all(storagePromises);
+
       const endpoints = this.EndpointProvider.endpoints();
       const modifiedEndpoint = _.find(endpoints, (item) => item.Id === this.endpoint.Id);
       if (modifiedEndpoint) {
@@ -99,6 +109,8 @@ class KubernetesConfigureController {
           });
         }
       });
+
+      this.oldStorageClasses = angular.copy(this.StorageClasses);
 
       this.formValues.UseLoadBalancer = this.endpoint.Kubernetes.Configuration.UseLoadBalancer;
     } catch (err) {
