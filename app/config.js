@@ -15,7 +15,7 @@ function config(
   $compileProvider,
   cfpLoadingBarProvider
 ) {
-  var environment = '@@ENVIRONMENT';
+  const environment = '@@ENVIRONMENT';
   if (environment === 'production') {
     $compileProvider.debugInfoEnabled(false);
   }
@@ -36,7 +36,7 @@ function config(
   $httpProvider.interceptors.push(
     /* @ngInject */ function (HttpRequestHelper) {
       return {
-        request: function (config) {
+        request(config) {
           if (config.url.indexOf('/docker/') > -1) {
             config.headers['X-PortainerAgent-Target'] = HttpRequestHelper.portainerAgentTargetHeader();
             if (HttpRequestHelper.portainerAgentManagerOperation()) {
