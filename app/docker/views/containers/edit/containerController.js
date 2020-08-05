@@ -8,7 +8,6 @@ angular.module('portainer.docker').controller('ContainerController', [
   '$transition$',
   '$filter',
   '$async',
-  'ExtensionService',
   'Commit',
   'ContainerHelper',
   'ContainerService',
@@ -29,7 +28,6 @@ angular.module('portainer.docker').controller('ContainerController', [
     $transition$,
     $filter,
     $async,
-    ExtensionService,
     Commit,
     ContainerHelper,
     ContainerService,
@@ -112,9 +110,7 @@ angular.module('portainer.docker').controller('ContainerController', [
             !allowHostNamespaceForRegularUsers ||
             !allowPrivilegedModeForRegularUsers;
 
-          ExtensionService.extensionEnabled(ExtensionService.EXTENSIONS.RBAC).then((rbacEnabled) => {
-            $scope.displayRecreateButton = !inSwarm && !autoRemove && (settingRestrictsRegularUsers || rbacEnabled ? admin : true);
-          });
+          $scope.displayRecreateButton = !inSwarm && !autoRemove && (admin || !settingRestrictsRegularUsers);
         })
         .catch(function error(err) {
           Notifications.error('Failure', err, 'Unable to retrieve container info');
