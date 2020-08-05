@@ -1259,8 +1259,6 @@ const (
 	RegistryManagementExtension
 	// OAuthAuthenticationExtension represents the OAuth authentication extension (Deprecated)
 	OAuthAuthenticationExtension
-	// RBACExtension represents the RBAC extension
-	RBACExtension
 )
 
 const (
